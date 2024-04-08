@@ -1,0 +1,48 @@
+[server]
+host = 'localhost'
+port = 50051
+max_workers = 10
+
+[service]
+
+[service.search]
+
+[service.search.chromadb]
+host = 'test'
+port = 3306
+collection = 'news'
+
+[service.search.embeddings]
+# Name of embedding model. All available models can be found [here](https://huggingface.co/models?language=zh)
+model = 'moka-ai/m3e-base'
+
+[service.search.query]
+# The template must contain the `{keywords}` placeholder.
+prompt_template = 'Please search for the content related to the following keywords: {keywords}.'
+similarity_top_k = 3
+
+[service.summarize]
+
+[service.summarize.chatgpt]
+api_key = '<API_KEY>'
+
+[service.summarize.query]
+system_template = """
+You are an expert Q&A system that is trusted around the world.
+Always answer the query using the provided context information, and not prior knowledge.
+Some rules to follow:
+1. Never directly reference the given context in your answer.
+2. Avoid statements like 'Based on the context, ...' or The context information ...' or anything along those lines."""
+
+# The template must contain the `{context_str}` and `{query_str}` placeholders.
+user_template = """
+Context information from multiple sources is below.
+---------------------
+{context_str}
+---------------------
+Given the information from multiple sources and not prior knowledge, answer the query.
+Query: {query_str}
+Answer: """
+
+# The content of `{query_str}` placeholder in the user template.
+query_str = '請用繁體中文總結這幾篇新聞。'

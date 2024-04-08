@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "llm-backend"
+package-mode = false
+authors = ["David Chiu <david20571015@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+grpcio = "^1.62.1"
+grpcio-tools = "^1.62.1"
+llama-index = "^0.10.26"
+llama-index-vector-stores-chroma = "^0.1.6"
+llama-index-embeddings-huggingface = "^0.2.0"
+chromadb = "^0.4.24"
+llama-index-llms-openai = "^0.1.14"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+pylint = "^3.0.0"
+yapf = "^0.40.2"
+pre-commit = "^3.4.0"
+pydocstyle = "^6.3.0"
+
+[tool.yapf]
+based_on_style = "google"
+
+[tool.isort]
+profile = "google"
+
+[tool.pydocstyle]
+convention = "google"
+add_ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
