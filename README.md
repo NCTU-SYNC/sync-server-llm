@@ -21,5 +21,5 @@ make serve
 
 ## Features
 
-1. [Semantic Search](protos/search.proto)
-2. [Summarization](protos/summarization.proto)
+1. [Semantic Search](https://github.com/NCTU-SYNC/llm-microservice-protos/blob/282d4dc1f7d8b1a96508fc43cef4fe10fde0d301/search.proto)
+2. [Summarization](https://github.com/NCTU-SYNC/llm-microservice-protos/blob/282d4dc1f7d8b1a96508fc43cef4fe10fde0d301/summarize.proto)
