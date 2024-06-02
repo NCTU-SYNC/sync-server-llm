@@ -1,7 +1,7 @@
 .DS_Store
 configs/*
 !configs/example.toml
-llm_backend/grpc/
+llm_backend/protos/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

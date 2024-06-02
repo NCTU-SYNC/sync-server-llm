@@ -9,10 +9,9 @@ from llama_index.core.response_synthesizers import get_response_synthesizer
 from llama_index.core.response_synthesizers import ResponseMode
 from llama_index.llms.openai import OpenAI
 
-from llm_backend.grpc import summarize_pb2
-from llm_backend.grpc import summarize_pb2_grpc
-from llm_backend.grpc.summarize_pb2_grpc import \
-    add_SummarizeServiceServicer_to_server
+from llm_backend.protos import summarize_pb2
+from llm_backend.protos import summarize_pb2_grpc
+from llm_backend.protos.summarize_pb2_grpc import add_SummarizeServiceServicer_to_server
 
 __all__ = [
     'SummarizeService',

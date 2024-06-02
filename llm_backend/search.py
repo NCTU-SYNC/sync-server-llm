@@ -6,10 +6,9 @@ from llama_index.core import VectorStoreIndex
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 
-from llm_backend.grpc import search_pb2
-from llm_backend.grpc import search_pb2_grpc
-from llm_backend.grpc.search_pb2_grpc import \
-    add_SearchServiceServicer_to_server
+from llm_backend.protos import search_pb2
+from llm_backend.protos import search_pb2_grpc
+from llm_backend.protos.search_pb2_grpc import add_SearchServiceServicer_to_server
 
 __all__ = [
     'SearchService',

@@ -3,7 +3,7 @@ PROTOC = $(PYTHON) -m grpc_tools.protoc
 
 PROTO_DIR = ./protos
 PROTO_FILES = $(wildcard $(PROTO_DIR)/*.proto)
-TARGET_DIR = $(shell poetry version | cut -d' ' -f1 | sed 's/-/_/g')/grpc
+TARGET_DIR = $(shell poetry version | cut -d' ' -f1 | sed 's/-/_/g')/protos
 TARGETS = $(patsubst $(PROTO_DIR)/%.proto,$(TARGET_DIR)/%_pb2.py,$(PROTO_FILES))
 
 .PHONY: all serve clean
