@@ -1,7 +1,6 @@
-from llm_backend import search
-from llm_backend import summarize
+from llm_backend import search, summarize
 
 __all__ = [
-    'search',
-    'summarize',
+    "search",
+    "summarize",
 ]
