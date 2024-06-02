@@ -6,7 +6,8 @@ authors = ["David Chiu <david20571015@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.scripts]
-gen-protos = "llm_backend.gen_protos:generate"
+serve = "scripts.serve:main"
+gen-protos = "scripts.gen_protos:generate"
 
 [tool.poetry.dependencies]
 python = "^3.11"

@@ -16,7 +16,7 @@ Please setup the configuration file `configs/config.toml` before running the ser
 You can refer to the `configs/example.toml` for the format.
 
 ```shell
-make serve
+poetry run serve --config configs/config.toml
 ```
 
 ## Features

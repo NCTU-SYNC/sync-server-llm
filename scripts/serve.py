@@ -90,13 +90,10 @@ def load_config(config_path):
         raise
 
 
+logger = logging.getLogger("server")
+
+
 def main():
-    args = parse_args()
-    config = load_config(args.config)
-    serve(config)
-
-
-if __name__ == "__main__":
     logging.basicConfig(
         format="%(asctime)s\t%(levelname)s: %(message)s",
         handlers=[
@@ -104,7 +101,8 @@ if __name__ == "__main__":
             logging.FileHandler("server.log", "w"),
         ],
     )
-    logger = logging.getLogger("server")
     logger.setLevel(logging.INFO)
 
-    main()
+    args = parse_args()
+    config = load_config(args.config)
+    serve(config)
