@@ -1,8 +1,12 @@
 [tool.poetry]
 name = "llm-backend"
-package-mode = false
+version = "0.1.0"
+description = ""
 authors = ["David Chiu <david20571015@gmail.com>"]
 readme = "README.md"
+
+[tool.poetry.scripts]
+gen-protos = "llm_backend.gen_protos:generate"
 
 [tool.poetry.dependencies]
 python = "^3.11"

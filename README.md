@@ -7,7 +7,7 @@ git clone --recurse-submodules https://github.com/NCTU-SYNC/sync-server-llm.git
 cd sync-server-llm
 
 poetry install
-make
+poetry run gen-protos
 ```
 
 ## Usage
