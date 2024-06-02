@@ -46,3 +46,9 @@ Answer: """
 
 # The content of `{query_str}` placeholder in the user template.
 query_str = '請用繁體中文總結這幾篇新聞。'
+
+# The transform function from the request strings to the query strings.
+# Must be one of:
+# - 'plain': The query string is the same as the request string.
+# - 'numbered': Add a number (1., 2., ...) to the beginning of each request string.
+content_format = 'plain'

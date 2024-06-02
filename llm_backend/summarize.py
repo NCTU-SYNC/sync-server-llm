@@ -1,4 +1,6 @@
-from typing import Optional
+from collections.abc import Callable
+from enum import StrEnum
+from typing import Literal, Optional
 
 import grpc
 from llama_index.core import ChatPromptTemplate
@@ -43,6 +45,19 @@ DEFAULT_USER_TEMPLATE = (
 DEFALUT_SUMMARIZE_QUERY_STR = "請用繁體中文總結這幾篇新聞。"
 
 
+class ContentFormat(StrEnum):
+    PLAIN = "plain"
+    NUMBERED = "numbered"
+
+
+CONTENT_FORMATTERS: dict[ContentFormat, Callable[[list[str]], list[str]]] = {
+    ContentFormat.PLAIN: lambda x: x,
+    ContentFormat.NUMBERED: lambda x: [
+        f"{i}. {line}" for i, line in enumerate(x, start=1)
+    ],
+}
+
+
 class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
     def __init__(
         self,
@@ -50,6 +65,7 @@ class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
         system_template: Optional[str] = None,
         user_template: Optional[str] = None,
         query_str: Optional[str] = None,
+        content_format: ContentFormat | Literal["plain", "numbered"] = "plain",
     ):
         llm = OpenAI(api_key=api_key)
 
@@ -72,12 +88,13 @@ class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
         self.summarizer.update_prompts({"summary_template": summarizer_prompt})
 
         self.query_str = query_str or DEFALUT_SUMMARIZE_QUERY_STR
+        self.content_formatter = CONTENT_FORMATTERS[ContentFormat(content_format)]
 
     def Summarize(
         self,
         request: summarize_pb2.SummarizeRequest,
         _context: grpc.ServicerContext,
     ):
-        texts = request.contents
+        texts = self.content_formatter(request.contents)
         summary = str(self.summarizer.get_response(self.query_str, texts))
         return summarize_pb2.SummarizeResponse(summary=summary)
