@@ -70,4 +70,13 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         retriever = self.index.as_retriever(similarity_top_k=similarity_top_k)
         results = retriever.retrieve(prompt)
 
-        return search_pb2.SearchResponse(ids=[result.node_id for result in results])
+        return search_pb2.SearchResponse(
+            results=[
+                search_pb2.RetrieveResult(
+                    id=result.node_id,
+                    score=result.score,
+                    content="".join(result.text.split()),
+                )
+                for result in results
+            ]
+        )
