@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from enum import StrEnum
 from typing import Literal, Optional
 
@@ -50,7 +50,7 @@ class ContentFormat(StrEnum):
     NUMBERED = "numbered"
 
 
-CONTENT_FORMATTERS: dict[ContentFormat, Callable[[list[str]], list[str]]] = {
+CONTENT_FORMATTERS: dict[ContentFormat, Callable[[Sequence[str]], Sequence[str]]] = {
     ContentFormat.PLAIN: lambda x: x,
     ContentFormat.NUMBERED: lambda x: [
         f"{i}. {line}" for i, line in enumerate(x, start=1)
