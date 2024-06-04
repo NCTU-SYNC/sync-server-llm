@@ -21,5 +21,4 @@ poetry run serve --config configs/config.toml
 
 ## Features
 
-1. [Semantic Search](https://github.com/NCTU-SYNC/llm-microservice-protos/blob/282d4dc1f7d8b1a96508fc43cef4fe10fde0d301/search.proto)
-2. [Summarization](https://github.com/NCTU-SYNC/llm-microservice-protos/blob/282d4dc1f7d8b1a96508fc43cef4fe10fde0d301/summarize.proto)
+Please refer to the protobuf files in `protos/` for the features provided by the server.
