@@ -32,7 +32,7 @@ def create_summarize_service(config: CONFIG):
         system_template=summarize_config.get("query", {}).get("system_template"),
         user_template=summarize_config.get("query", {}).get("user_template"),
         query_str=summarize_config.get("query", {}).get("query_str"),
-        content_format=summarize_config.get("query", {}).get("content_format"),
+        content_format=summarize_config.get("query", {}).get("content_format", "plain"),
     )
 
 
