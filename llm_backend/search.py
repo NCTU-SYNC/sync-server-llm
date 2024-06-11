@@ -2,6 +2,7 @@ from typing import Optional
 
 import chromadb
 import grpc
+from chromadb.config import Settings
 from llama_index.core import VectorStoreIndex
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
@@ -26,6 +27,7 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         self,
         host: str = "localhost",
         port: int = 8000,
+        token: str = "",
         collection: str = "news",
         embedding_model: str = DEFAULT_EMBEDDING_MODEL,
         query_template: Optional[str] = None,
@@ -36,6 +38,7 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         Args:
             host: Host of ChromaDB server. Set to 'test' for testing.
             port: Port of ChromaDB server.
+            token: Token for authentication.
             collection: Name of collection.
             embedding_model: Name of embedding model. All available
                 models can be found [here](https://huggingface.co/models?language=zh)
@@ -45,7 +48,14 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         if host == "test":
             client = chromadb.PersistentClient()
         else:
-            client = chromadb.HttpClient(host=host, port=port)
+            client = chromadb.HttpClient(
+                host=host,
+                port=port,
+                settings=Settings(
+                    chroma_client_auth_provider="chromadb.auth.token.TokenAuthClientProvider",
+                    chroma_client_auth_credentials=token,
+                ),
+            )
 
         vector_store = ChromaVectorStore(
             chroma_collection=client.get_or_create_collection(collection)

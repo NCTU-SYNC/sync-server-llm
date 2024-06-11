@@ -18,6 +18,7 @@ def create_search_service(config: CONFIG):
     return search.SearchService(
         host=search_config.get("chromadb", {}).get("host"),
         port=search_config.get("chromadb", {}).get("port"),
+        token=search_config.get("chromadb", {}).get("token"),
         collection=search_config.get("chromadb", {}).get("collection"),
         embedding_model=search_config.get("embeddings", {}).get("model"),
         query_template=search_config.get("query", {}).get("prompt_template"),
@@ -72,7 +73,7 @@ def parse_args():
     parser.add_argument(
         "--config",
         type=str,
-        default=os.path.join("config", "config.toml"),
+        default=os.path.join("configs", "config.toml"),
         help="Path to the config file.",
     )
     return parser.parse_args()

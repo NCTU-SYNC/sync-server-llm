@@ -10,6 +10,7 @@ max_workers = 10
 [service.search.chromadb]
 host = 'test'
 port = 3306
+token = 'test'
 collection = 'news'
 
 [service.search.embeddings]
