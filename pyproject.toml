@@ -10,14 +10,14 @@ serve = "scripts.serve:main"
 gen-protos = "scripts.gen_protos:generate"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 grpcio = "^1.62.1"
 grpcio-tools = "^1.62.1"
 llama-index = "^0.10.26"
 llama-index-vector-stores-chroma = "^0.1.6"
 llama-index-embeddings-huggingface = "^0.2.0"
-chromadb = "^0.4.24"
 llama-index-llms-openai = "^0.1.14"
+chromadb = "^0.5.2"
 
 
 [tool.poetry.group.dev.dependencies]
