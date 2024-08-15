@@ -52,7 +52,7 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
                 host=host,
                 port=port,
                 settings=Settings(
-                    chroma_client_auth_provider="chromadb.auth.token.TokenAuthClientProvider",
+                    chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
                     chroma_client_auth_credentials=token,
                 ),
             )

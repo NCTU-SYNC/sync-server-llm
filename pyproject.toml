@@ -14,10 +14,10 @@ python = "^3.12"
 grpcio = "^1.62.1"
 grpcio-tools = "^1.62.1"
 llama-index = "^0.10.26"
-llama-index-vector-stores-chroma = "^0.1.6"
+llama-index-vector-stores-chroma = "^0.1.10"
 llama-index-embeddings-huggingface = "^0.2.0"
 llama-index-llms-openai = "^0.1.14"
-chromadb = "^0.5.2"
+chromadb = "^0.5.5"
 
 
 [tool.poetry.group.dev.dependencies]
