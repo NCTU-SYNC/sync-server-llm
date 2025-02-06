@@ -9,10 +9,10 @@ dependencies = [
     "grpcio>=1.62.1,<2",
     "grpcio-tools>=1.62.1,<2",
     "llama-index~=0.12.16",
-    "llama-index-vector-stores-chroma~=0.4.1",
+    "llama-index-vector-stores-qdrant~=0.4.3",
     "llama-index-embeddings-huggingface~=0.5.1",
     "llama-index-llms-openai~=0.3.18",
-    "chromadb~=0.6",
+    "qdrant-client~=1.13.2",
 ]
 
 [project.scripts]
@@ -23,7 +23,7 @@ gen-protos = "scripts.gen_protos:generate"
 dev = ["pre-commit==3.7.1", "ruff==0.9.4"]
 
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = ["I", "UP"]
 
 [build-system]
 requires = ["hatchling"]
