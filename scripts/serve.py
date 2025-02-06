@@ -16,10 +16,9 @@ CONFIG = dict[str, Any]
 def create_search_service(config: CONFIG):
     search_config: CONFIG = config.get("service", {}).get("search", {})
     return search.SearchService(
-        host=search_config.get("chromadb", {}).get("host"),
-        port=search_config.get("chromadb", {}).get("port"),
-        token=search_config.get("chromadb", {}).get("token"),
-        collection=search_config.get("chromadb", {}).get("collection"),
+        host=search_config.get("qdrant", {}).get("host"),
+        port=search_config.get("qdrant", {}).get("port"),
+        collection=search_config.get("qdrant", {}).get("collection"),
         embedding_model=search_config.get("embeddings", {}).get("model"),
         query_template=search_config.get("query", {}).get("prompt_template"),
         similarity_top_k=search_config.get("query", {}).get("similarity_top_k"),
