@@ -4,42 +4,16 @@ import os
 import sys
 import tomllib
 from concurrent import futures
-from typing import Any
 
 import grpc
 
-from llm_backend import search, summarize
-
-CONFIG = dict[str, Any]
+from llm_backend import Config, setup_search_service, setup_summarize_service
 
 
-def create_search_service(config: CONFIG):
-    search_config: CONFIG = config.get("service", {}).get("search", {})
-    return search.SearchService(
-        host=search_config.get("qdrant", {}).get("host"),
-        port=search_config.get("qdrant", {}).get("port"),
-        collection=search_config.get("qdrant", {}).get("collection"),
-        embedding_model=search_config.get("embeddings", {}).get("model"),
-        query_template=search_config.get("query", {}).get("prompt_template"),
-        similarity_top_k=search_config.get("query", {}).get("similarity_top_k"),
-    )
-
-
-def create_summarize_service(config: CONFIG):
-    summarize_config: CONFIG = config.get("service", {}).get("summarize", {})
-    return summarize.SummarizeService(
-        api_key=summarize_config.get("chatgpt", {}).get("api_key"),
-        system_template=summarize_config.get("query", {}).get("system_template"),
-        user_template=summarize_config.get("query", {}).get("user_template"),
-        query_str=summarize_config.get("query", {}).get("query_str"),
-        content_format=summarize_config.get("query", {}).get("content_format", "plain"),
-    )
-
-
-def start_server(server: grpc.Server, config: CONFIG):
+def start_server(server: grpc.Server, config: Config):
     try:
-        server_config: CONFIG = config.get("server", {})
-        address = f"{server_config.get('host', 'localhost')}:{server_config.get('port', 50051)}"
+        server_config = config.server
+        address = f"{server_config.host}:{server_config.port}"
         server.add_insecure_port(address=address)
         server.start()
         logger.info("Server started on %s", address)
@@ -49,19 +23,15 @@ def start_server(server: grpc.Server, config: CONFIG):
         raise
 
 
-def serve(config: CONFIG):
+def serve(config: Config):
     server = grpc.server(
-        futures.ThreadPoolExecutor(
-            max_workers=config.get("server", {}).get("max_workers", 10)
-        )
+        futures.ThreadPoolExecutor(max_workers=config.server.max_workers)
     )
 
-    search_service = create_search_service(config)
-    search.add_SearchServiceServicer_to_server(search_service, server)
+    setup_search_service(config, server)
     logger.info("Added SearchService to server")
 
-    summarize_service = create_summarize_service(config)
-    summarize.add_SummarizeServiceServicer_to_server(summarize_service, server)
+    setup_summarize_service(config, server)
     logger.info("Added SummarizeService to server")
 
     start_server(server, config)
@@ -72,7 +42,7 @@ def parse_args():
     parser.add_argument(
         "--config",
         type=str,
-        default=os.path.join("configs", "config.toml"),
+        default=os.path.join("configs", "example.toml"),
         help="Path to the config file.",
     )
     return parser.parse_args()
@@ -82,13 +52,10 @@ def load_config(config_path):
     try:
         with open(config_path, "rb") as config_file:
             config = tomllib.load(config_file)
-            return config
     except FileNotFoundError as e:
         logger.error("Config file not found: %s", e)
         raise
-    except Exception as e:
-        logger.error("Error loading config file: %s", e)
-        raise
+    return Config.model_validate(config)
 
 
 logger = logging.getLogger("server")

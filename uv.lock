@@ -734,6 +734,7 @@ dependencies = [
     { name = "llama-index-embeddings-huggingface" },
     { name = "llama-index-llms-openai" },
     { name = "llama-index-vector-stores-qdrant" },
+    { name = "pydantic" },
     { name = "qdrant-client" },
 ]
 
@@ -751,6 +752,7 @@ requires-dist = [
     { name = "llama-index-embeddings-huggingface", specifier = "~=0.5.1" },
     { name = "llama-index-llms-openai", specifier = "~=0.3.18" },
     { name = "llama-index-vector-stores-qdrant", specifier = "~=0.4.3" },
+    { name = "pydantic", specifier = ">=2.10.6" },
     { name = "qdrant-client", specifier = "~=1.13.2" },
 ]
 
