@@ -25,7 +25,6 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         self,
         host: str = "localhost",
         port: int = 8000,
-        token: str = "",
         collection: str = "news",
         embedding_model: str = DEFAULT_EMBEDDING_MODEL,
         query_template: str | None = None,
@@ -36,7 +35,6 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         Args:
             host: Host of ChromaDB server. Set to 'test' for testing.
             port: Port of ChromaDB server.
-            token: Token for authentication.
             collection: Name of collection.
             embedding_model: Name of embedding model. All available
                 models can be found [here](https://huggingface.co/models?language=zh)
@@ -54,7 +52,6 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         vector_store = QdrantVectorStore(
             aclient=client,
             collection_name=collection,
-            token=token,
         )
         embed_model = HuggingFaceEmbedding(model_name=embedding_model)
 

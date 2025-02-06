@@ -7,10 +7,9 @@ max_workers = 10
 
 [service.search]
 
-[service.search.chromadb]
+[service.search.qdrant]
 host = 'test'
 port = 3306
-token = 'test'
 collection = 'news'
 
 [service.search.embeddings]
