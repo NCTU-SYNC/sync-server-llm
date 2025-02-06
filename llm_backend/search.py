@@ -30,11 +30,10 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         query_template: str | None = None,
         similarity_top_k: int | None = None,
     ):
-        """Initialize ChromaDBWriter.
-
+        """
         Args:
-            host: Host of ChromaDB server. Set to 'test' for testing.
-            port: Port of ChromaDB server.
+            host: Host of QDrant server. Set to 'test' for testing.
+            port: Port of QDrant server.
             collection: Name of collection.
             embedding_model: Name of embedding model. All available
                 models can be found [here](https://huggingface.co/models?language=zh)
