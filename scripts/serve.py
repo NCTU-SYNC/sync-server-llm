@@ -2,11 +2,11 @@ import argparse
 import logging
 import os
 import sys
+import tomllib
 from concurrent import futures
 from typing import Any
 
 import grpc
-import tomllib
 
 from llm_backend import search, summarize
 
@@ -40,7 +40,7 @@ def create_summarize_service(config: CONFIG):
 def start_server(server: grpc.Server, config: CONFIG):
     try:
         server_config: CONFIG = config.get("server", {})
-        address = f'{server_config.get("host", "localhost")}:{server_config.get("port", 50051)}'
+        address = f"{server_config.get('host', 'localhost')}:{server_config.get('port', 50051)}"
         server.add_insecure_port(address=address)
         server.start()
         logger.info("Server started on %s", address)

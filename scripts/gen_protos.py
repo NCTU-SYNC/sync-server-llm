@@ -9,6 +9,8 @@ def generate():
     proto_files = glob.glob(f"{proto_dir}/*.proto")
 
     command = [
+        "uv",
+        "run",
         "python",
         "-m",
         "grpc_tools.protoc",
