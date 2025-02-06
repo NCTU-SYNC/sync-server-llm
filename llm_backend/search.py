@@ -1,11 +1,9 @@
-from typing import Optional
-
-import chromadb
 import grpc
-from chromadb.config import Settings
+import qdrant_client
 from llama_index.core import VectorStoreIndex
+from llama_index.core.schema import NodeWithScore
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.vector_stores.chroma import ChromaVectorStore
+from llama_index.vector_stores.qdrant import QdrantVectorStore
 
 from llm_backend.protos import search_pb2, search_pb2_grpc
 from llm_backend.protos.search_pb2_grpc import add_SearchServiceServicer_to_server
@@ -30,8 +28,8 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         token: str = "",
         collection: str = "news",
         embedding_model: str = DEFAULT_EMBEDDING_MODEL,
-        query_template: Optional[str] = None,
-        similarity_top_k: Optional[int] = None,
+        query_template: str | None = None,
+        similarity_top_k: int | None = None,
     ):
         """Initialize ChromaDBWriter.
 
@@ -46,19 +44,17 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
             similarity_top_k: Number of top results to return.
         """
         if host == "test":
-            client = chromadb.PersistentClient()
+            client = qdrant_client.AsyncQdrantClient(location=":memory:")
         else:
-            client = chromadb.HttpClient(
+            client = qdrant_client.AsyncQdrantClient(
                 host=host,
                 port=port,
-                settings=Settings(
-                    chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
-                    chroma_client_auth_credentials=token,
-                ),
             )
 
-        vector_store = ChromaVectorStore(
-            chroma_collection=client.get_or_create_collection(collection)
+        vector_store = QdrantVectorStore(
+            aclient=client,
+            collection_name=collection,
+            token=token,
         )
         embed_model = HuggingFaceEmbedding(model_name=embedding_model)
 
@@ -78,7 +74,7 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         similarity_top_k = request.similarity_top_k or self.similarity_top_k
 
         retriever = self.index.as_retriever(similarity_top_k=similarity_top_k)
-        results = retriever.retrieve(prompt)
+        results: list[NodeWithScore] = retriever.retrieve(prompt)
 
         return search_pb2.SearchResponse(
             results=[
