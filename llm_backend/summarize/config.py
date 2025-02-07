@@ -1,8 +1,9 @@
-from collections.abc import Callable, Sequence
 from enum import StrEnum
 from typing import Annotated
 
+from llama_index.llms.openai.utils import ALL_AVAILABLE_MODELS
 from pydantic import AfterValidator, BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from ..utils import contains_placeholder
 
@@ -26,7 +27,7 @@ DEFAULT_USER_TEMPLATE = (
     "Query: {query_str}\n"
     "Answer:"
 )
-DEFALUT_QUERY_STR = "請用繁體中文總結這幾篇新聞。"
+DEFAULT_QUERY_STR = "請用繁體中文總結這幾篇新聞。"
 
 
 class ContentFormat(StrEnum):
@@ -34,18 +35,28 @@ class ContentFormat(StrEnum):
     NUMBERED = "numbered"
 
 
-type ContentFormater = Callable[[Sequence[str]], Sequence[str]]
-
-CONTENT_FORMATTERS: dict[ContentFormat, ContentFormater] = {
-    ContentFormat.PLAIN: lambda x: x,
-    ContentFormat.NUMBERED: lambda x: [
-        f"{i}. {line}" for i, line in enumerate(x, start=1)
-    ],
-}
+def is_available_model(model_name: str):
+    if model_name not in ALL_AVAILABLE_MODELS:
+        raise ValueError(
+            f"Model {model_name} is not available. Available models are: {ALL_AVAILABLE_MODELS}"
+        )
+    return model_name
 
 
-class ChatgptConfig(BaseModel):
-    api_key: str
+class ChatgptConfig(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=(".env", ".env.prod"),
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="ignore",
+    )
+
+    api_key: str = Field(validation_alias="OPENAI_API_KEY")
+    model: Annotated[
+        str,
+        Field("gpt-3.5-turbo"),
+        AfterValidator(is_available_model),
+    ]
 
 
 class SummarizeQueryConfig(BaseModel):
@@ -54,7 +65,7 @@ class SummarizeQueryConfig(BaseModel):
         str, AfterValidator(contains_placeholder("context_str", "query_str"))
     ] = DEFAULT_USER_TEMPLATE
     query_str: str = Field(
-        DEFALUT_QUERY_STR,
+        DEFAULT_QUERY_STR,
         description="The content of `{query_str}` placeholder in the user template.",
     )
     content_format: ContentFormat = ContentFormat.PLAIN

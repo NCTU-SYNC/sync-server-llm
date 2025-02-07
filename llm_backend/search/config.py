@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from pydantic import AfterValidator, BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from ..utils import contains_placeholder
 
@@ -11,10 +12,22 @@ DEFAULT_QUERY_PROMPT_TEMPLATE = (
 )
 
 
-class QDrantConfig(BaseModel):
-    host: str = "test"
-    port: int = Field(6333, gt=0)  # 6333 is the default port of Qdrant
-    collection: str = "news"
+class QDrantConfig(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=(".env", ".env.prod"),
+        env_file_encoding="utf-8",
+        env_prefix="QDRANT_",
+        case_sensitive=True,
+        extra="ignore",
+    )
+
+    host: str = Field("test", validation_alias="HOST")
+    port: int = Field(
+        6333,  # 6333 is the default port of Qdrant
+        validation_alias="PORT",
+        gt=0,
+    )
+    collection: str = Field("news", validation_alias="COLLECTION")
 
 
 class EmbeddingsConfig(BaseModel):
@@ -33,6 +46,6 @@ class QueryConfig(BaseModel):
 
 
 class SearchConfig(BaseModel):
-    qdrant: QDrantConfig
+    qdrant: QDrantConfig = Field(default_factory=QDrantConfig)  # type: ignore
     embeddings: EmbeddingsConfig
     query: QueryConfig

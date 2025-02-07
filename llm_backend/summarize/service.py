@@ -21,9 +21,9 @@ __all__ = [
 ]
 
 
-type ContentFormater = Callable[[Sequence[str]], Sequence[str]]
+type ContentFormatter = Callable[[Sequence[str]], Sequence[str]]
 
-CONTENT_FORMATTERS: dict[ContentFormat, ContentFormater] = {
+CONTENT_FORMATTERS: dict[ContentFormat, ContentFormatter] = {
     ContentFormat.PLAIN: lambda x: x,
     ContentFormat.NUMBERED: lambda x: [
         f"{i}. {line}" for i, line in enumerate(x, start=1)
@@ -36,7 +36,7 @@ class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
         self,
         config: SummarizeConfig,
     ):
-        llm = OpenAI(api_key=config.chatgpt.api_key)
+        llm = OpenAI(model=config.chatgpt.model, api_key=config.chatgpt.api_key)
 
         self.summarizer = get_response_synthesizer(
             llm, response_mode=ResponseMode.TREE_SUMMARIZE, use_async=True

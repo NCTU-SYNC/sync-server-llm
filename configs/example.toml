@@ -3,15 +3,6 @@ host = 'localhost'
 port = 50051
 max_workers = 10
 
-[service]
-
-[service.search]
-
-[service.search.qdrant]
-host = 'test'
-port = 3306
-collection = 'news'
-
 [service.search.embeddings]
 # Name of embedding model. All available models can be found [here](https://huggingface.co/models?language=zh)
 model = 'moka-ai/m3e-base'
@@ -21,10 +12,8 @@ model = 'moka-ai/m3e-base'
 prompt_template = 'Please search for the content related to the following keywords: {keywords}.'
 similarity_top_k = 3
 
-[service.summarize]
-
 [service.summarize.chatgpt]
-api_key = '<API_KEY>'
+model = 'o3-mini'
 
 [service.summarize.query]
 system_template = """

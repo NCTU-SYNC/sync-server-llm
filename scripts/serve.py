@@ -58,9 +58,6 @@ def load_config(config_path):
     return Config.model_validate(config)
 
 
-logger = logging.getLogger("server")
-
-
 def main():
     logging.basicConfig(
         format="%(asctime)s\t%(levelname)s: %(message)s",
@@ -74,3 +71,9 @@ def main():
     args = parse_args()
     config = load_config(args.config)
     serve(config)
+
+
+logger = logging.getLogger("server")
+
+if __name__ == "__main__":
+    main()
