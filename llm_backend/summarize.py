@@ -1,6 +1,6 @@
 from collections.abc import Callable, Sequence
 from enum import StrEnum
-from typing import Literal, Optional
+from typing import Literal
 
 import grpc
 from llama_index.core import ChatPromptTemplate
@@ -62,9 +62,9 @@ class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
     def __init__(
         self,
         api_key: str,
-        system_template: Optional[str] = None,
-        user_template: Optional[str] = None,
-        query_str: Optional[str] = None,
+        system_template: str | None = None,
+        user_template: str | None = None,
+        query_str: str | None = None,
         content_format: ContentFormat | Literal["plain", "numbered"] = "plain",
     ):
         llm = OpenAI(api_key=api_key)
