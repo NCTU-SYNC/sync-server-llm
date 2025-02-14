@@ -13,6 +13,8 @@ dependencies = [
     "llama-index-embeddings-huggingface~=0.5.1",
     "llama-index-llms-openai~=0.3.18",
     "qdrant-client~=1.13.2",
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.7.1",
 ]
 
 [project.scripts]
@@ -21,6 +23,9 @@ gen-protos = "scripts.gen_protos:generate"
 
 [dependency-groups]
 dev = ["pre-commit==3.7.1", "ruff==0.9.4"]
+
+[tool.ruff]
+extend-exclude = ["llm_backend/protos"]
 
 [tool.ruff.lint]
 extend-select = ["I", "UP"]

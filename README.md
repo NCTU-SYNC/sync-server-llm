@@ -11,8 +11,13 @@ uv run gen-protos
 
 ## Usage
 
-Please setup the configuration file `configs/config.toml` before running the server.
-You can refer to the `configs/example.toml` for the format.
+Please configure the `configs/config.toml` file (refer to `configs/example.toml` for the options).
+The following environment variables are required (`export` them or place them in a `.env` file):
+
+- `OPENAI_API_KEY`: Your ChatGPT API key.
+- `QDRANT_HOST`: The Qdrant host address.
+- `QDRANT_PORT`: The Qdrant host port.
+- `QDRANT_COLLECTION`: The Qdrant collection name.
 
 ```shell
 uv run serve --config configs/config.toml
@@ -20,4 +25,4 @@ uv run serve --config configs/config.toml
 
 ## Features
 
-Please refer to the protobuf files in `protos/` for the features provided by the server.
+Refer to the protobuf files in the `protos/` directory for the features provided by the server.
