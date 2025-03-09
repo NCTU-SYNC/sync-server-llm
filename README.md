@@ -11,7 +11,7 @@ uv run gen-protos
 
 ## Usage
 
-Please configure the `configs/config.toml` file (refer to `configs/example.toml` for the options).
+Please configure the `configs/config.toml` file.
 The following environment variables are required (`export` them or place them in a `.env` file):
 
 - `OPENAI_API_KEY`: Your ChatGPT API key.
@@ -20,7 +20,7 @@ The following environment variables are required (`export` them or place them in
 - `QDRANT_COLLECTION`: The Qdrant collection name.
 
 ```shell
-uv run serve --config configs/config.toml
+python3 scripts/serve.py --config configs/config.toml
 ```
 
 ## Features
