@@ -1,0 +1,44 @@
+[server]
+host = 'localhost'
+port = 50051
+max_workers = 10
+
+[service.retrieve]
+# Name of embedding model. All available models can be found [here](https://huggingface.co/models?language=zh)
+embedding_model = 'intfloat/multilingual-e5-large'
+
+# The template must contain the `{keywords}` placeholder.
+prompt_template = 'Please search for the content related to the following keywords: {keywords}.'
+similarity_top_k = 5
+
+[service.summarize]
+system_template = """
+# Project Mission: My project mission is to extract 5 articles of the same type from the internet each time and provide them to Chat GPT in the same format to generate summaries and digests, making it convenient for the general public to read.
+# Input Format: The format during input is as follows: 1.xxx 2.xxx 3.xxx 4.xxx 5.xxx Each news article is numbered with a digit title. There is a blank line between different news articles, but within the same article, there are no line breaks.
+# Detailed Project Execution: The detailed execution of the project involves refraining from adding personal opinions. I only generate summaries based on the provided news and refrain from providing responses beyond the scope of the news.
+# Audience for My Content: The audience comprises professionals from various fields, as well as students and homemakers. They span a wide range of age groups and have a strong desire for knowledge. However, due to limited time, they cannot personally read a large amount of news information. Therefore, my content typically needs to be transformed into something understandable by the general public, with logical analysis involving specific questions and solutions.
+
+# Assuming you are now a reader, think step by step about what you think the key points of the news would be, and provide the first version of the summary. Then, based on this summary, pose sub-questions and further modify to provide the final summary.
+# Answer in Traditional Chinese, and refrain from providing thoughts and content beyond what you've provided. Endeavor to comprehensively describe the key points of the news.
+# Responses should strive to be rigorous and formal, with real evidence when answering questions.
+# Answers can be as complete and comprehensive as possible, expanding on details and actual content.
+# The "Output Format" is: provide an overarching title that summarizes the news content above, then summarizes the content.
+"""
+
+# The template must contain the `{context_str}` and `{query_str}` placeholders.
+user_template = """
+{query_str}
+---------------------
+{context_str}"""
+
+# The content of `{query_str}` placeholder in the user template.
+query_str = '假設你是一個摘要抓取者，請將以下---內的文字做一篇文章摘要，用文章敘述的方式呈現，不要用列點的，至少要有500字，要有標題。'
+
+# The transform function from the request strings to the query strings.
+# Must be one of:
+# - 'plain': The query string is the same as the request string.
+# - 'numbered': Add a number (1., 2., ...) to the beginning of each request string.
+content_format = 'plain'
+
+[service.summarize.llm]
+model = 'gpt-4o-mini'

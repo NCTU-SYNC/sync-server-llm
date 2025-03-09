@@ -1,6 +1,4 @@
 .DS_Store
-configs/*
-!configs/example.toml
 llm_backend/protos/
 
 # Byte-compiled / optimized / DLL files
