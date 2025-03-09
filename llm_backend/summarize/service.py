@@ -61,5 +61,5 @@ class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
         context: grpc.aio.ServicerContext,
     ):
         texts = self.content_formatter(request.contents)
-        summary = str(self.summarizer.aget_response(self.query_str, texts))
+        summary = str(await self.summarizer.aget_response(self.query_str, texts))
         return summarize_pb2.SummarizeResponse(summary=summary)
