@@ -23,6 +23,12 @@ The following environment variables are required (`export` them or place them in
 python3 scripts/serve.py --config configs/config.toml
 ```
 
+You can refer to `scripts/client.py` for an example implementation of a client:
+
+```shell
+python3 scripts/client.py
+```
+
 ## Features
 
 Refer to the protobuf files in the `protos/` directory for the features provided by the server.
