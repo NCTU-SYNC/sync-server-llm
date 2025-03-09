@@ -20,7 +20,7 @@ The following environment variables are required (`export` them or place them in
 - `QDRANT_COLLECTION`: The Qdrant collection name.
 
 ```shell
-uv run serve --config configs/config.toml
+python3 scripts/serve.py --config configs/config.toml
 ```
 
 ## Features

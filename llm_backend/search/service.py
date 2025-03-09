@@ -36,16 +36,16 @@ class SearchService(search_pb2_grpc.SearchServiceServicer):
         self.query_template = config.query.prompt_template
         self.similarity_top_k = config.query.similarity_top_k
 
-    def Search(
+    async def Search(
         self,
         request: search_pb2.SearchRequest,
-        context: grpc.ServicerContext,
+        context: grpc.aio.ServicerContext,
     ):
         prompt = self.query_template.format(keywords=", ".join(request.keywords))
         similarity_top_k = request.similarity_top_k or self.similarity_top_k
 
         retriever = self.index.as_retriever(similarity_top_k=similarity_top_k)
-        results: list[NodeWithScore] = retriever.retrieve(prompt)
+        results: list[NodeWithScore] = await retriever.aretrieve(prompt)
 
         return search_pb2.SearchResponse(
             results=[

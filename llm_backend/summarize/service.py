@@ -55,11 +55,11 @@ class SummarizeService(summarize_pb2_grpc.SummarizeServiceServicer):
         self.query_str = config.query.query_str
         self.content_formatter = CONTENT_FORMATTERS[config.query.content_format]
 
-    def Summarize(
+    async def Summarize(
         self,
         request: summarize_pb2.SummarizeRequest,
-        context: grpc.ServicerContext,
+        context: grpc.aio.ServicerContext,
     ):
         texts = self.content_formatter(request.contents)
-        summary = str(self.summarizer.get_response(self.query_str, texts))
+        summary = str(await self.summarizer.aget_response(self.query_str, texts))
         return summarize_pb2.SummarizeResponse(summary=summary)

@@ -1,40 +1,13 @@
 import argparse
+import asyncio
 import logging
 import os
-import sys
 import tomllib
 from concurrent import futures
 
 import grpc
 
 from llm_backend import Config, setup_search_service, setup_summarize_service
-
-
-def start_server(server: grpc.Server, config: Config):
-    try:
-        server_config = config.server
-        address = f"{server_config.host}:{server_config.port}"
-        server.add_insecure_port(address=address)
-        server.start()
-        logger.info("Server started on %s", address)
-        server.wait_for_termination()
-    except Exception as e:
-        logger.error("Error occurred while starting server: %s", e)
-        raise
-
-
-def serve(config: Config):
-    server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=config.server.max_workers)
-    )
-
-    setup_search_service(config, server)
-    logger.info("Added SearchService to server")
-
-    setup_summarize_service(config, server)
-    logger.info("Added SummarizeService to server")
-
-    start_server(server, config)
 
 
 def parse_args():
@@ -58,22 +31,44 @@ def load_config(config_path):
     return Config.model_validate(config)
 
 
-def main():
-    logging.basicConfig(
-        format="%(asctime)s\t%(levelname)s: %(message)s",
-        handlers=[
-            logging.StreamHandler(sys.stdout),
-            logging.FileHandler("server.log", "w"),
-        ],
+async def serve(config: Config, logger: logging.Logger):
+    server = grpc.aio.server(
+        futures.ThreadPoolExecutor(max_workers=config.server.max_workers)
     )
+    setup_search_service(config, server)
+    logger.info("Added SearchService to server")
+
+    setup_summarize_service(config, server)
+    logger.info("Added SummarizeService to server")
+
+    server_config = config.server
+    address = f"{server_config.host}:{server_config.port}"
+    server.add_insecure_port(address=address)
+    logger.info("Server started on %s", address)
+
+    await server.start()
+
+    async def server_graceful_shutdown():
+        logging.info("Starting graceful shutdown...")
+        await server.stop(3)
+
+    _cleanup_coroutines.append(server_graceful_shutdown())
+
+    await server.wait_for_termination()
+
+
+if __name__ == "__main__":
+    logging.basicConfig(format="%(asctime)s\t%(levelname)s: %(message)s")
+    logger = logging.getLogger("server")
     logger.setLevel(logging.INFO)
 
     args = parse_args()
     config = load_config(args.config)
-    serve(config)
 
-
-logger = logging.getLogger("server")
-
-if __name__ == "__main__":
-    main()
+    loop = asyncio.new_event_loop()
+    _cleanup_coroutines = []
+    try:
+        loop.run_until_complete(serve(config, logger))
+    finally:
+        loop.run_until_complete(*_cleanup_coroutines)
+        loop.close()
