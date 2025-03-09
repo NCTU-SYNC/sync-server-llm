@@ -18,7 +18,6 @@ dependencies = [
 ]
 
 [project.scripts]
-serve = "scripts.serve:main"
 gen-protos = "scripts.gen_protos:generate"
 
 [dependency-groups]
