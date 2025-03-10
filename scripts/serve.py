@@ -2,13 +2,12 @@ import argparse
 import asyncio
 import logging
 import os
-import sys
 import tomllib
 from concurrent import futures
 
 import grpc
 
-from llm_backend import Config, setup_rag_service
+from llm_backend import Config, setup_search_service, setup_summarize_service
 
 
 def parse_args():
@@ -16,7 +15,7 @@ def parse_args():
     parser.add_argument(
         "--config",
         type=str,
-        default=os.path.join("configs", "config.toml"),
+        default=os.path.join("configs", "example.toml"),
         help="Path to the config file.",
     )
     return parser.parse_args()
@@ -28,7 +27,7 @@ def load_config(config_path):
             config = tomllib.load(config_file)
     except FileNotFoundError as e:
         logger.error("Config file not found: %s", e)
-        sys.exit(1)
+        raise
     return Config.model_validate(config)
 
 
@@ -36,9 +35,11 @@ async def serve(config: Config, logger: logging.Logger):
     server = grpc.aio.server(
         futures.ThreadPoolExecutor(max_workers=config.server.max_workers)
     )
+    setup_search_service(config, server)
+    logger.info("Added SearchService to server")
 
-    setup_rag_service(config, server)
-    logger.info("RagService setup complete")
+    setup_summarize_service(config, server)
+    logger.info("Added SummarizeService to server")
 
     server_config = config.server
     address = f"{server_config.host}:{server_config.port}"

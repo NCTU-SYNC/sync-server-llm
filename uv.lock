@@ -1,5 +1,4 @@
 version = 1
-revision = 1
 requires-python = "==3.12.*"
 
 [[package]]
@@ -747,7 +746,6 @@ dependencies = [
     { name = "grpcio" },
     { name = "grpcio-tools" },
     { name = "llama-index" },
-    { name = "llama-index-core" },
     { name = "llama-index-embeddings-huggingface" },
     { name = "llama-index-llms-openai" },
     { name = "llama-index-vector-stores-qdrant" },
@@ -767,7 +765,6 @@ requires-dist = [
     { name = "grpcio", specifier = ">=1.62.1,<2" },
     { name = "grpcio-tools", specifier = ">=1.62.1,<2" },
     { name = "llama-index", specifier = "~=0.12.16" },
-    { name = "llama-index-core", specifier = "~=0.12.17" },
     { name = "llama-index-embeddings-huggingface", specifier = "~=0.5.1" },
     { name = "llama-index-llms-openai", specifier = "~=0.3.18" },
     { name = "llama-index-vector-stores-qdrant", specifier = "~=0.4.3" },
