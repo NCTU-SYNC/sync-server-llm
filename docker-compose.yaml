@@ -1,0 +1,27 @@
+# Docker Compose configuration for SYNC Server LLM
+# This sets up both the backend-llm service and its required Qdrant vector database
+
+services:
+  # Main backend service for SYNC Server LLM
+  backend-llm:
+    build: sync-server-llm # Path to the directory with Dockerfile of sync-server-llm
+    restart: always
+    ports:
+      # Maps the container port to host (must match server.port in config.toml)
+      - 50051:50051
+    env_file:
+      - .env
+    environment:
+      QDRANT_HOST: qdrant
+    volumes:
+      # Mount configuration and cache for persistence
+      - ./configs/config.toml:/app/configs/config.toml
+      - ./.hf_cache:/tmp/llama_index
+
+  # Qdrant vector database service
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: always
+    volumes:
+      # Mount storage for persistence
+      - ./qdrant_storage:/qdrant/storage

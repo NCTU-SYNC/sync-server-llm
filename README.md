@@ -15,13 +15,13 @@ uv sync --no-dev --frozen
 uv run gen-protos
 ```
 
-## Usage
+## Configuration
 
-This section explains how to run the SYNC Server LLM using different methods.
+Before running the server, you need to:
 
-1. Configure the server by editing `configs/config.toml`
+1. Configure the server settings in `configs/config.toml`
 
-2. Set up the required environment variables by adding them to a `.env` file
+2. Create a `.env` file with the following environment variables:
 
    | Variable            | Description                   |
    | ------------------- | ----------------------------- |
@@ -30,38 +30,58 @@ This section explains how to run the SYNC Server LLM using different methods.
    | `QDRANT_PORT`       | The Qdrant host REST API port |
    | `QDRANT_COLLECTION` | The Qdrant collection name    |
 
-3. Start the server:
+## Running the Server
 
-   - To run the server locally:
+You can run SYNC Server LLM using one of the following methods:
 
-      ```shell
-      uv run scripts/serve.py --config configs/config.toml
-      ```
+### Method 1: Running Locally
 
-   - To run the server using Docker:
+```shell
+uv run scripts/serve.py --config configs/config.toml
+```
 
-      Build the Docker image:
+### Method 2: Using Docker
 
-      ```shell
-      docker build -t sync/backend-llm .
-      ```
+1. Build the Docker image:
 
-      Run the container:
+   ```shell
+   docker build -t sync/backend-llm .
+   ```
 
-      ```shell
-      docker run -p 50051:50051 \
-            --env-file .env \
-            -v $(pwd)/path/to/configs:/app/configs/config.toml \
-            -v $(pwd)/path/to/hf_cache:/tmp/llama_index \
-            sync/backend-llm
-      ```
+2. Run the container:
 
-      > 1. If you are using Windows, you can add `--gpus=all` to the `docker run` command. Ensure that your Docker installation supports GPU usage.
-      > 2. It is strongly recommended to mount the `hf_cache` directory to a persistent volume to avoid re-downloading the Hugging Face models every time the container is started.
+   ```shell
+   docker run -p 50051:50051 \
+         --env-file .env \
+         -v $(pwd)/path/to/configs:/app/configs/config.toml \
+         -v $(pwd)/path/to/hf_cache:/tmp/llama_index \
+         sync/backend-llm
+   ```
+
+   > Notes:
+   > - For Windows users, add `--gpus=all` to use GPU capabilities (requires Docker with GPU support)
+   > - We strongly recommend mounting the `hf_cache` directory to avoid re-downloading Hugging Face models on container restart
+   > - Make sure to [set up and run the Qdrant server](https://qdrant.tech/documentation/guides/installation/#docker-and-docker-compose) before starting
+
+### Method 3: Using Docker Compose
+
+A `docker-compose.yaml` file is included in the repository to simplify deployment with both the server and Qdrant database.
+
+1. Build the services:
+
+   ```shell
+   docker-compose build
+   ```
+
+2. Start the services:
+
+   ```shell
+   docker-compose up -d
+   ```
 
 ## Client Example
 
-You can refer to `scripts/client.py` for an example implementation of a client:
+To test the server, you can use the provided client example:
 
 ```shell
 uv run scripts/client.py
