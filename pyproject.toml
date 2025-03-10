@@ -9,7 +9,6 @@ dependencies = [
     "grpcio>=1.62.1,<2",
     "grpcio-tools>=1.62.1,<2",
     "llama-index~=0.12.16",
-    "llama-index-core~=0.12.17",
     "llama-index-vector-stores-qdrant~=0.4.3",
     "llama-index-embeddings-huggingface~=0.5.1",
     "llama-index-llms-openai~=0.3.18",

@@ -11,7 +11,7 @@ uv run gen-protos
 
 ## Usage
 
-Please configure the `configs/config.toml` file.
+Please configure the `configs/config.toml` file (refer to `configs/example.toml` for the options).
 The following environment variables are required (`export` them or place them in a `.env` file):
 
 - `OPENAI_API_KEY`: Your ChatGPT API key.
@@ -21,12 +21,6 @@ The following environment variables are required (`export` them or place them in
 
 ```shell
 python3 scripts/serve.py --config configs/config.toml
-```
-
-You can refer to `scripts/client.py` for an example implementation of a client:
-
-```shell
-python3 scripts/client.py
 ```
 
 ## Features
