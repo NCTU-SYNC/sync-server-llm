@@ -49,7 +49,7 @@ async def serve(config: Config, logger: logging.Logger):
 
     async def server_graceful_shutdown():
         logging.info("Starting graceful shutdown...")
-        await server.stop(3)
+        await server.stop(1)
 
     _cleanup_coroutines.append(server_graceful_shutdown())
 

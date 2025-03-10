@@ -1,0 +1,58 @@
+# Git
+.git/
+.gitignore
+.gitmodules
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Cache
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.cache/
+
+# Build artifacts
+build/
+dist/
+*.manifest
+*.spec
+
+# Logs
+*.log
+logs/
+
+# Local development files
+.pytest_cache
+.coverage
+*.swp
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Project specific
+.python-version
+.pre-commit-config.yaml
+.github/
+
+# Environment
+.env
+.env.*
+env/
+
+# Generated files
+llm_backend/protos/

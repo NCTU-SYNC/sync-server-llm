@@ -9,9 +9,7 @@ def generate():
     proto_files = glob.glob(f"{proto_dir}/*.proto")
 
     command = [
-        "uv",
-        "run",
-        "python",
+        "python3",
         "-m",
         "grpc_tools.protoc",
         f"-I{target_dir}={proto_dir}",
@@ -21,3 +19,7 @@ def generate():
     ] + proto_files
 
     subprocess.run(command, shell=False, check=True)
+
+
+if __name__ == "__main__":
+    generate()
