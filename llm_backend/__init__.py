@@ -7,7 +7,6 @@ from .rag import RagConfig, RagService, add_RagServiceServicer_to_server
 
 
 class ServerConfig(BaseModel):
-    host: str = "localhost"
     port: int
     max_workers: int = (os.cpu_count() or 1) * 5
 
