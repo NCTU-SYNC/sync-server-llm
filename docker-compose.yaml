@@ -4,7 +4,9 @@
 services:
   # Main backend service for SYNC Server LLM
   backend-llm:
-    build: sync-server-llm # Path to the directory with Dockerfile of sync-server-llm
+    build:
+      context: . # Path to the directory with Dockerfile of sync-server-llm
+      dockerfile: Dockerfile
     restart: always
     ports:
       # Maps the container port to host (must match server.port in config.toml)
@@ -20,7 +22,7 @@ services:
 
   # Qdrant vector database service
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.13.4
     restart: always
     volumes:
       # Mount storage for persistence

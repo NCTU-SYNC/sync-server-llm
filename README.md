@@ -40,6 +40,10 @@ You can run SYNC Server LLM using one of the following methods:
 uv run scripts/serve.py --config configs/config.toml
 ```
 
+> Notes:
+>
+> - Make sure to [set up and run the Qdrant server](https://qdrant.tech/documentation/guides/installation/#docker-and-docker-compose) before starting
+
 ### Method 2: Using Docker
 
 1. Build the Docker image:
