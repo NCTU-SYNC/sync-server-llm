@@ -41,7 +41,7 @@ async def serve(config: Config, logger: logging.Logger):
     logger.info("RagService setup complete")
 
     server_config = config.server
-    address = f"{server_config.host}:{server_config.port}"
+    address = f"[::]:{server_config.port}"
     server.add_insecure_port(address=address)
     logger.info("Server started on %s", address)
 
