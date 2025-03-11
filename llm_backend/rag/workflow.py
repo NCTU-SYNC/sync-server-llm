@@ -18,7 +18,7 @@ from .content_formatters import CONTENT_FORMATTERS
 
 
 class RetrieveResult(BaseModel):
-    news_id: str = Field(description="The mongodb id of the retrieved news.")
+    mongo_id: str = Field(description="The mongodb id of the retrieved news.")
     score: float = Field(description="The score of the retrieved news.")
     content: str = Field(description="The content of the retrieved news.")
 
@@ -84,7 +84,7 @@ class RagWorkflow(Workflow):
         return RetrieveEvent(
             results=[
                 RetrieveResult(
-                    news_id=result.metadata["news_id"],
+                    mongo_id=result.metadata["mongo_id"],
                     score=result.get_score(),
                     content="".join(result.text.split()),
                 )
@@ -99,7 +99,7 @@ class RagWorkflow(Workflow):
         summary = str(await self.summarizer.aget_response(self.query_str, texts))
         return StopEvent(
             result={
-                "retrieved_ids": [result.news_id for result in ev.results],
+                "retrieved_ids": [result.mongo_id for result in ev.results],
                 "summary": summary,
             }
         )
