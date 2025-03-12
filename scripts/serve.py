@@ -7,6 +7,7 @@ import tomllib
 from concurrent import futures
 
 import grpc
+from llama_index.core.utils import infer_torch_device
 
 from llm_backend import Config, setup_rag_service
 
@@ -44,11 +45,12 @@ async def serve(config: Config, logger: logging.Logger):
     address = f"[::]:{server_config.port}"
     server.add_insecure_port(address=address)
     logger.info("Server started on %s", address)
+    logger.info("Torch device: %s", infer_torch_device())
 
     await server.start()
 
     async def server_graceful_shutdown():
-        logging.info("Starting graceful shutdown...")
+        logger.info("Starting graceful shutdown...")
         await server.stop(1)
 
     _cleanup_coroutines.append(server_graceful_shutdown())
