@@ -46,22 +46,48 @@ def contains_placeholder(*placeholders: str):
 
 
 class QDrantConfig(BaseSettings):
-    host: str = Field("test", validation_alias="QDRANT_HOST")
-    port: int = Field(6333, gt=0, validation_alias="QDRANT_PORT")
-    collection: str = Field("news", validation_alias="QDRANT_COLLECTION")
+    host: str = Field(
+        "test",
+        validation_alias="QDRANT_HOST",
+        description="Qdrant vector database host address. Default is 'test'.",
+    )
+    port: int = Field(
+        6333,
+        gt=0,
+        validation_alias="QDRANT_PORT",
+        description="Qdrant vector database port. Default is 6333.",
+    )
+    collection: str = Field(
+        "news",
+        validation_alias="QDRANT_COLLECTION",
+        description="Qdrant vector database collection name. Default is 'news'.",
+    )
 
 
 class RetrieveConfig(BaseModel):
     vector_database: QDrantConfig = QDrantConfig()  # type: ignore
     embedding_model: str = Field(
         DEFAULT_EMBEDDING_MODEL,
-        description="Name of embedding model."
-        "All available models can be found [here](https://huggingface.co/models?library=sentence-transformers&language=zh).",
+        description=(
+            "Embedding model name. "
+            "See https://huggingface.co/models?library=sentence-transformers&language=zh for available models. "
+            f"Default is '{DEFAULT_EMBEDDING_MODEL}'."
+        ),
     )
     prompt_template: Annotated[
         str, AfterValidator(contains_placeholder("keywords"))
-    ] = DEFAULT_QUERY_PROMPT_TEMPLATE
-    similarity_top_k: int = Field(DEFAULT_SIMILARITY_TOP_K, gt=1)
+    ] = Field(
+        DEFAULT_QUERY_PROMPT_TEMPLATE,
+        description="Prompt template for retrieval. Must contain the {keywords} placeholder.",
+    )
+    similarity_top_k: int = Field(
+        DEFAULT_SIMILARITY_TOP_K,
+        gt=1,
+        description=(
+            "Number of top similar results to return during retrieval. "
+            f"Default is {DEFAULT_SIMILARITY_TOP_K}."
+        ),
+    )
 
 
 def is_available_model(model_name: str):
@@ -73,25 +99,41 @@ def is_available_model(model_name: str):
 
 
 class ChatGptConfig(BaseSettings):
-    api_key: str = Field(validation_alias="OPENAI_API_KEY")
+    api_key: str = Field(
+        validation_alias="OPENAI_API_KEY", description="OpenAI API key."
+    )
     model: Annotated[
         str,
-        Field(DEFAULT_OPENAI_MODEL),
         AfterValidator(is_available_model),
-    ]
+    ] = Field(
+        DEFAULT_OPENAI_MODEL,
+        description=f"OpenAI LLM model name. Default is '{DEFAULT_OPENAI_MODEL}'.",
+    )
 
 
 class SummarizeConfig(BaseModel):
-    llm: ChatGptConfig = ChatGptConfig()  # type: ignore
-    system_template: str = DEFAULT_SYSTEM_TEMPLATE
+    llm: ChatGptConfig = Field(
+        default_factory=ChatGptConfig,  #  # type: ignore
+        description="Configuration for the LLM used for summarization.",
+    )
+    system_template: str = Field(
+        DEFAULT_SYSTEM_TEMPLATE,
+        description="System prompt template for the LLM, used to set the role and rules.",
+    )
     user_template: Annotated[
         str, AfterValidator(contains_placeholder("context_str", "query_str"))
-    ] = DEFAULT_USER_TEMPLATE
+    ] = Field(
+        DEFAULT_USER_TEMPLATE,
+        description="User prompt template for the LLM. Must contain {context_str} and {query_str} placeholders.",
+    )
     query_str: str = Field(
         DEFAULT_QUERY_STR,
-        description="The content of `{query_str}` placeholder in the user template.",
+        description="Content for the {query_str} placeholder in user_template.",
     )
-    content_format: ContentFormat = ContentFormat.PLAIN
+    content_format: ContentFormat = Field(
+        ContentFormat.PLAIN,
+        description=f"Format of the summary content. Options: {', '.join(e.value for e in ContentFormat)}.",
+    )
 
 
 class RagConfig(BaseModel):
