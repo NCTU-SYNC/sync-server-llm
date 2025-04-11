@@ -113,7 +113,7 @@ class ChatGptConfig(BaseSettings):
 
 class SummarizeConfig(BaseModel):
     llm: ChatGptConfig = Field(
-        default_factory=ChatGptConfig,  #  # type: ignore
+        default_factory=ChatGptConfig,  # type: ignore
         description="Configuration for the LLM used for summarization.",
     )
     system_template: str = Field(
